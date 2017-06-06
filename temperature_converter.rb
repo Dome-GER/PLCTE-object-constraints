@@ -15,13 +15,13 @@ class TemperatureConverter
 		puts('@fahrenheit: ' + @fahrenheit.to_s)
 	end
 
-	# def example
-	# 	cent = 20.0
-	#	fahr = 130.5
-	#
-	#	CentFahrRel.bind({:c => 'cent', :f => 'fahr'}, binding)
-	#
-	#	puts('cent: ' + cent.to_s)
-	#	puts('fahr: ' + fahr.to_s)
-	# end
+	def example
+	 	cent = 20.0
+		fahr = 130.5
+	
+		DelayedConstraint.relationFahrCent({:c => 'cent', :f => 'fahr'}, binding)
+	
+		puts('cent: ' + cent.to_s)
+		puts('fahr: ' + fahr.to_s)
+	end
 end

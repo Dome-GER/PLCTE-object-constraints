@@ -12,8 +12,7 @@ class DelayedConstraint
     		raise ArgumentError, "Constraint does not exist"
     	end
 
-
-    	self.new(@@constraints[name]).bind(param_binding, context)
+    	self.new(@@constraints[name].clone).bind(param_binding, context)
   	end
 
 	attr_reader :constraint
