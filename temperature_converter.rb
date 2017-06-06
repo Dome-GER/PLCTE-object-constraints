@@ -1,18 +1,4 @@
-require 'libz3'
-
-class DelayedConstraint
-	attr_reader :constraint
-	def initialize(constraint_definition)
-		@constraint = constraint_definition
-	end
-
-	def bind(params, context)
-		params.each do |key, value| 
-			constraint.replace(constraint.sub(key.to_s, value))
-		end
-		eval(constraint, context)
-	end
-end
+require_relative 'delayed_constraint'
 
 class TemperatureConverter
 
@@ -39,6 +25,3 @@ class TemperatureConverter
 	#	puts('fahr: ' + fahr.to_s)
 	# end
 end
-
-t = TemperatureConverter.new
-# t.example
