@@ -9,7 +9,7 @@ class TemperatureConverter
 		@centigrade = 100.0
 		@fahrenheit = 100.0
 
-		DelayedConstraint.relationFahrCent({:c => '@centigrade', :f => '@fahrenheit'}, binding)
+		DelayedConstraint.relationFahrCent({:c => :@centigrade, :f => :@fahrenheit}, binding)
 
 		puts('@centigrade: ' + @centigrade.to_s)
 		puts('@fahrenheit: ' + @fahrenheit.to_s)
@@ -19,7 +19,7 @@ class TemperatureConverter
 	 	cent = 20.0
 		fahr = 130.5
 	
-		DelayedConstraint.relationFahrCent({:c => 'cent', :f => 'fahr'}, binding)
+		DelayedConstraint.relationFahrCent({:c => :cent, :f => :fahr}, binding)
 	
 		puts('cent: ' + cent.to_s)
 		puts('fahr: ' + fahr.to_s)

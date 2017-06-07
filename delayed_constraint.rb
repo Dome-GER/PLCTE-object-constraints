@@ -22,7 +22,7 @@ class DelayedConstraint
 
 	def bind(params, context)
 		params.each do |key, value| 
-			constraint.replace(constraint.sub(key.to_s, value))
+			constraint.replace(constraint.sub(key.to_s, value.to_s))
 		end
 		eval(constraint, context)
 	end
