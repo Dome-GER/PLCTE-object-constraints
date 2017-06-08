@@ -6,8 +6,11 @@ class TemperatureConverter
 
 	def initialize
 
-		@centigrade = 100.0
-		@fahrenheit = 100.0
+		@centigrade = 130.0
+		@fahrenheit = 110.0
+
+		puts('@centigrade: ' + @centigrade.to_s)
+		puts('@fahrenheit: ' + @fahrenheit.to_s)
 
 		DelayedConstraint.relationFahrCent({:c => :@centigrade, :f => :@fahrenheit}, binding)
 
@@ -16,12 +19,19 @@ class TemperatureConverter
 	end
 
 	def example
-	 	cent = 20.0
-		fahr = 130.5
-	
+		# not working because of Topaz bug, see https://github.com/topazproject/topaz/issues/839
+	 	cent = 50.0
+		fahr = 100.0
+		
+		puts('cent: ' + cent.to_s)
+		puts('fahr: ' + fahr.to_s)
+
 		DelayedConstraint.relationFahrCent({:c => :cent, :f => :fahr}, binding)
 	
 		puts('cent: ' + cent.to_s)
 		puts('fahr: ' + fahr.to_s)
 	end
 end
+
+t = TemperatureConverter.new
+t.example

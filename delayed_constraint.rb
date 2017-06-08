@@ -12,7 +12,7 @@ class DelayedConstraint
     		raise ArgumentError, "Constraint does not exist"
     	end
 
-    	self.new(@@constraints[name].clone).bind(param_binding, context)
+    	self.new(@@constraints[name]).bind(param_binding, context)
   	end
 
 	attr_reader :constraint
@@ -23,9 +23,12 @@ class DelayedConstraint
 	def bind(params, context)
 		unless params.nil?
 			params.each do |key, value| 
-				constraint.replace(constraint.sub(key.to_s, value.to_s))
+				@constraint = constraint.sub(key.to_s, value.to_s)
 			end
 		end
+		#eval("puts s: s, e: e, n: n, d: d, m: m, o: o, r: r, y: y", context)
 		eval(constraint, context)
+		#puts "executed constraint: #{constraint}"
+		#eval("puts s: s, e: e, n: n, d: d, m: m, o: o, r: r, y: y", context)
 	end
 end
