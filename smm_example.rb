@@ -9,13 +9,13 @@ require "libarraysolver"
 require_relative 'delayed_constraint'
 
 # We are now able to declare constraints here
-DelayedConstraint.constraint(:digit_between, "always { [s,e,n,d,m,o,r,y].ins(0..9) }")
-DelayedConstraint.constraint(:digits_different, "always { [s,e,n,d,m,o,r,y].alldifferent? }")
+DelayedConstraint.constraint(:digit_between, "always { [ss,e,n,d,m,o,r,yy].ins(0..9) }")
+DelayedConstraint.constraint(:digits_different, "always { [ss,e,n,d,m,o,r,yy].alldifferent? }")
 DelayedConstraint.constraint(
 	:send_more,
-	"always {   s*1000 + e*100 + n*10 + d +
+	"always {   ss*1000 + e*100 + n*10 + d +
      		    m*1000 + o*100 + r*10 + e ==
- 	m*10000 + o*1000 + n*100 + e*10 + y }"
+ 	m*10000 + o*1000 + n*100 + e*10 + yy }"
 )
 DelayedConstraint.constraint(:greater_zero, "always { x>0 }")
 
@@ -33,26 +33,32 @@ class Array
 end
 
 # initialize each variable to an integer so that the solver knows its type
-s,e,n,d,m,o,r,y = [0]*8
+class SMM
+	attr_reader :ss, :e, :n, :d, :m, :o, :r, :yy
+	def initialize
+		@ss,@e,@n,@d,@m,@o,@r,@yy = [0]*8
 
-puts "initial s: #{s}, e: #{e}, n: #{n}, d: #{d}, m: #{m}, o: #{o}, r: #{r}, y: #{y}"
-# each digit is between 0 and 9
-#always { [s,e,n,d,m,o,r,y].ins(0..9) } 
-DelayedConstraint.digit_between(nil, binding)
+		# each digit is between 0 and 9
+		#always { [s,e,n,d,m,o,r,y].ins(0..9) } 
+		DelayedConstraint.digit_between({:ss => :@ss, :e => :@e, :n => :@n, :d => :@d, :m => :@m, :o => :@o, :r => :@r, :yy => :@yy}, binding)
 
-# all are different
-#always { [s,e,n,d,m,o,r,y].alldifferent? }
-DelayedConstraint.digits_different(nil, binding)
+		# all digits are different
+		#always { [s,e,n,d,m,o,r,y].alldifferent? }
+		DelayedConstraint.digits_different({:ss => :@ss, :e => :@e, :n => :@n, :d => :@d, :m => :@m, :o => :@o, :r => :@r, :yy => :@yy}, binding)
 
-DelayedConstraint.send_more(nil, binding)
-#always {   s*1000 + e*100 + n*10 + d +
-#           m*1000 + o*100 + r*10 + e ==
-#m*10000 + o*1000 + n*100 + e*10 + y }
+		#always {   s*1000 + e*100 + n*10 + d +
+		#           m*1000 + o*100 + r*10 + e ==
+		#m*10000 + o*1000 + n*100 + e*10 + y }
+		DelayedConstraint.send_more({:ss => :@ss, :e => :@e, :n => :@n, :d => :@d, :m => :@m, :o => :@o, :r => :@r, :yy => :@yy}, binding)
 
-# the leading digits can't be 0
-DelayedConstraint.greater_zero({:x => :s}, binding)
-DelayedConstraint.greater_zero({:x => :m}, binding)
-#always { s>0 }
-#always { m>0 }
+		# the leading digits can't be 0
+		#always { s>0 }
+		#always { m>0 }
+		DelayedConstraint.greater_zero({:x => :@ss}, binding)
+		DelayedConstraint.greater_zero({:x => :@m}, binding)
 
-puts ("solution: [s,e,n,d,m,o,r,y] = " + [s,e,n,d,m,o,r,y].to_s)
+		puts ("solution: [ss,e,n,d,m,o,r,yy] = " + [ss,e,n,d,m,o,r,yy].to_s)
+	end
+end
+
+t = SMM.new
