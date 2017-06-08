@@ -21,8 +21,10 @@ class DelayedConstraint
 	end
 
 	def bind(params, context)
-		params.each do |key, value| 
-			constraint.replace(constraint.sub(key.to_s, value.to_s))
+		unless params.nil?
+			params.each do |key, value| 
+				constraint.replace(constraint.sub(key.to_s, value.to_s))
+			end
 		end
 		eval(constraint, context)
 	end
