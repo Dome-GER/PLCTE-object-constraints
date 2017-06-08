@@ -26,9 +26,6 @@ class DelayedConstraint
 				@constraint = constraint.sub(key.to_s, value.to_s)
 			end
 		end
-		#eval("puts s: s, e: e, n: n, d: d, m: m, o: o, r: r, y: y", context)
 		eval(constraint, context)
-		#puts "executed constraint: #{constraint}"
-		#eval("puts s: s, e: e, n: n, d: d, m: m, o: o, r: r, y: y", context)
 	end
 end
