@@ -2,7 +2,7 @@ require_relative 'delayed_constraint'
 
 class TemperatureConverter
 
-	DelayedConstraint.constraint(:relationFahrCent, "always {c * 1.8 == f - 32.0 }")
+	constraint :relationFahrCent, "{c * 1.8 == f - 32.0 }"
 
 	def initialize
 
@@ -12,7 +12,7 @@ class TemperatureConverter
 		puts('@centigrade: ' + @centigrade.to_s)
 		puts('@fahrenheit: ' + @fahrenheit.to_s)
 
-		DelayedConstraint.relationFahrCent({:c => :@centigrade, :f => :@fahrenheit}, binding)
+		always :relationFahrCent, {:c => :@centigrade, :f => :@fahrenheit}, binding
 
 		puts('@centigrade: ' + @centigrade.to_s)
 		puts('@fahrenheit: ' + @fahrenheit.to_s)
@@ -26,7 +26,7 @@ class TemperatureConverter
 		puts('cent: ' + cent.to_s)
 		puts('fahr: ' + fahr.to_s)
 
-		DelayedConstraint.relationFahrCent({:c => :cent, :f => :fahr}, binding)
+		always :relationFahrCent, {:c => :cent, :f => :fahr}, binding
 	
 		puts('cent: ' + cent.to_s)
 		puts('fahr: ' + fahr.to_s)

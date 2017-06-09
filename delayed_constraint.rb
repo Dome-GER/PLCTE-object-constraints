@@ -1,18 +1,25 @@
 require 'libz3'
 
-class DelayedConstraint
+class Object
 	@@constraints = {}
 
-	def self.constraint(identifier, constraint_definition)
-		@@constraints[identifier] = constraint_definition
+	def self.constraint(name, definition)
+		@@constraints[name] = definition
 	end
 
-	def self.method_missing(name, param_binding, context)
+	alias_method :_always, :always
+	def always(constraint_name, bindings, context)
+		DelayedConstraint.send constraint_name.to_sym, bindings, context, :_always
+	end
+end
+
+class DelayedConstraint
+	def self.method_missing(name, bindings, context, type)
     	unless @@constraints.key?(name.to_sym)
     		raise ArgumentError, "Constraint does not exist"
     	end
 
-    	self.new(@@constraints[name]).bind(param_binding, context)
+    	self.new(@@constraints[name]).bind(bindings, context, type)
   	end
 
 	attr_reader :constraint
@@ -20,12 +27,12 @@ class DelayedConstraint
 		@constraint = constraint_definition
 	end
 
-	def bind(params, context)
-		unless params.nil?
-			params.each do |key, value| 
+	def bind(bindings, context, type)
+		unless bindings.nil?
+			bindings.each do |key, value| 
 				@constraint = constraint.sub(key.to_s, value.to_s)
 			end
 		end
-		eval(constraint, context)
+		eval("#{type} #{constraint}", context)
 	end
 end
