@@ -11,6 +11,10 @@ class Object
 	def always(constraint_name, bindings, context)
 		DelayedConstraint.send constraint_name.to_sym, bindings, context, :_always
 	end
+
+	def constraint(name, definition)
+		self.class.constraint(name, definition)
+	end
 end
 
 class DelayedConstraint
