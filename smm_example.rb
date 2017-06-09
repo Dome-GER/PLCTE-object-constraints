@@ -3,7 +3,6 @@
 # This is attempting to follow the code in the SWI Prolog manual:
 #  http://www.swi-prolog.org/man/clpfd.html
 
-
 require "libz3"
 require "libarraysolver"
 require_relative 'delayed_constraint'
@@ -35,18 +34,20 @@ class SMM
 	def initialize
 		@s,@e,@n,@d,@m,@o,@r,@y = [0]*8
 
+		bindings = Hash[['s', 'e', 'n', 'd', 'm', 'o', 'r', 'y'].map {|v| [v,"@#{v}".to_sym]}]
+
 		# each digit is between 0 and 9
 		#always { [s,e,n,d,m,o,r,y].ins(0..9) } 
-		always :digit_between, {:s => :@s, :e => :@e, :n => :@n, :d => :@d, :m => :@m, :o => :@o, :r => :@r, :y => :@y}, binding
+		always :digit_between, bindings, binding
 
 		# all digits are different
 		#always { [s,e,n,d,m,o,r,y].alldifferent? }
-		always :digits_different, {:s => :@s, :e => :@e, :n => :@n, :d => :@d, :m => :@m, :o => :@o, :r => :@r, :y => :@y}, binding
+		always :digits_different, bindings, binding
 
 		#always {   s*1000 + e*100 + n*10 + d +
 		#           m*1000 + o*100 + r*10 + e ==
 		#m*10000 + o*1000 + n*100 + e*10 + y }
-		always :send_more, {:s => :@s, :e => :@e, :n => :@n, :d => :@d, :m => :@m, :o => :@o, :r => :@r, :y => :@y}, binding
+		always :send_more, bindings, binding
 
 		# the leading digits can't be 0
 		#always { s>0 }
