@@ -2,7 +2,7 @@ require_relative 'delayed_constraint'
 
 class TemperatureConverter
 
-	constraint :relationFahrCent, "{ c * 1.8 == f - 32.0 }"
+	constraint :relationFahrCent, "{ :c * 1.8 == :f - 32.0 }"
 
 	def initialize
 

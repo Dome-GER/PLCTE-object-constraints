@@ -7,13 +7,13 @@ class Object
 		@@constraints[name] = definition
 	end
 
+	def constraint(name, definition)
+		self.class.constraint(name, definition)
+	end
+
 	alias_method :_always, :always
 	def always(constraint_name, bindings, context)
 		DelayedConstraint.send constraint_name.to_sym, bindings, context, :_always
-	end
-
-	def constraint(name, definition)
-		self.class.constraint(name, definition)
 	end
 end
 
@@ -34,7 +34,7 @@ class DelayedConstraint
 	def bind(bindings, context, type)
 		unless bindings.nil?
 			bindings.each do |key, value| 
-				@constraint = constraint.sub(key.to_s, value.to_s)
+				@constraint = constraint.gsub(":#{key.to_s}", value.to_s)
 			end
 		end
 		eval("#{type} #{constraint}", context)
