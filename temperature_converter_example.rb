@@ -11,7 +11,12 @@ class TemperatureConverter
 		puts('@centigrade: ' + @centigrade.to_s)
 		puts('@fahrenheit: ' + @fahrenheit.to_s)
 
-		once :relationFahrCent, {:c => :@centigrade, :f => :@fahrenheit}, binding
+		always :relationFahrCent, {:c => :@centigrade, :f => :@fahrenheit}, binding
+
+		puts('@centigrade: ' + @centigrade.to_s)
+		puts('@fahrenheit: ' + @fahrenheit.to_s)
+
+		@centigrade = 120.0
 
 		puts('@centigrade: ' + @centigrade.to_s)
 		puts('@fahrenheit: ' + @fahrenheit.to_s)
