@@ -10,11 +10,20 @@ class Object
 	def constraint(name, definition)
 		self.class.constraint(name, definition)
 	end
-
+	
 	alias_method :_always, :always
 	def always(constraint_name, bindings, context)
 		DelayedConstraint.send constraint_name.to_sym, bindings, context, :_always
 	end
+
+	def once(constraint_name, bindings, context)
+		DelayedConstraint.send constraint_name.to_sym, bindings, context, :_once
+	end
+	
+	def _once(*args, &block)
+	    constraint = _always(*args, &block)
+	    constraint.disable
+ 	end
 end
 
 class DelayedConstraint
