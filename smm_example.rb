@@ -28,30 +28,31 @@ class Array
   end
 end
 
-# initialize each variable to an integer so that the solver knows its type
 class SMM
 	attr_reader :s, :e, :n, :d, :m, :o, :r, :y
+
 	def initialize
+		# initialize each variable to an integer so that the solver knows its type
 		@s,@e,@n,@d,@m,@o,@r,@y = [0]*8
 
-		bindings = Hash[['s', 'e', 'n', 'd', 'm', 'o', 'r', 'y'].map {|v| [v,"@#{v}".to_sym]}]
+		bindings = Hash[[:s, :e, :n, :d, :m, :o, :r, :y].map {|v| [v,"@#{v}".to_sym]}]
 
 		# each digit is between 0 and 9
-		#always { [s,e,n,d,m,o,r,y].ins(0..9) } 
+		# always { [s,e,n,d,m,o,r,y].ins(0..9) } 
 		always :digit_between, bindings, binding
 
 		# all digits are different
-		#always { [s,e,n,d,m,o,r,y].alldifferent? }
+		# always { [s,e,n,d,m,o,r,y].alldifferent? }
 		always :digits_different, bindings, binding
 
-		#always {   s*1000 + e*100 + n*10 + d +
-		#           m*1000 + o*100 + r*10 + e ==
-		#m*10000 + o*1000 + n*100 + e*10 + y }
+		# always {   s*1000 + e*100 + n*10 + d +
+		#            m*1000 + o*100 + r*10 + e ==
+		# m*10000 + o*1000 + n*100 + e*10 + y }
 		always :send_more, bindings, binding
 
 		# the leading digits can't be 0
-		#always { s>0 }
-		#always { m>0 }
+		# always { s>0 }
+		# always { m>0 }
 		always :greater_zero, {:x => :@s}, binding
 		always :greater_zero, {:x => :@m}, binding
 

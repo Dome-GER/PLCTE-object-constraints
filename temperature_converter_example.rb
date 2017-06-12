@@ -4,22 +4,24 @@ class TemperatureConverter
 
 	constraint :relationFahrCent, "{ :c * 1.8 == :f - 32.0 }"
 
+	attr_reader :centigrade, :fahrenheit
+	
 	def initialize
 		@centigrade = 130.0
 		@fahrenheit = 110.0
 
-		puts('@centigrade: ' + @centigrade.to_s)
-		puts('@fahrenheit: ' + @fahrenheit.to_s)
+		puts('@centigrade: ' + centigrade.to_s)
+		puts('@fahrenheit: ' + fahrenheit.to_s)
 
 		always :relationFahrCent, {:c => :@centigrade, :f => :@fahrenheit}, binding
 
-		puts('@centigrade: ' + @centigrade.to_s)
-		puts('@fahrenheit: ' + @fahrenheit.to_s)
+		puts('@centigrade: ' + centigrade.to_s)
+		puts('@fahrenheit: ' + fahrenheit.to_s)
 
 		@centigrade = 120.0
 
-		puts('@centigrade: ' + @centigrade.to_s)
-		puts('@fahrenheit: ' + @fahrenheit.to_s)
+		puts('@centigrade: ' + centigrade.to_s)
+		puts('@fahrenheit: ' + fahrenheit.to_s)
 	end
 
 	def example
