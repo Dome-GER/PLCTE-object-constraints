@@ -13,11 +13,11 @@ class Object
 	
 	alias_method :_always, :always
 	def always(constraint_name, bindings, context)
-		DelayedConstraint.send constraint_name.to_sym, bindings, context, :_always
+		DelayedConstraint.new(@@constraints[constraint_name.to_sym]).bind(bindings, context, :_always)
 	end
 
 	def once(constraint_name, bindings, context)
-		DelayedConstraint.send constraint_name.to_sym, bindings, context, :_once
+		DelayedConstraint.new(@@constraints[constraint_name.to_sym]).bind(bindings, context, :_once)
 	end
 	
 	def _once(*args, &block)
@@ -27,14 +27,6 @@ class Object
 end
 
 class DelayedConstraint
-	def self.method_missing(name, bindings, context, type)
-    	unless @@constraints.key?(name.to_sym)
-    		raise ArgumentError, "Constraint does not exist"
-    	end
-
-    	self.new(@@constraints[name]).bind(bindings, context, type)
-  	end
-
 	attr_reader :constraint
 	def initialize(constraint_definition)
 		@constraint = constraint_definition
