@@ -1,4 +1,5 @@
 require_relative 'delayed_constraint'
+require 'libz3'
 
 class TemperatureConverter
 
@@ -32,7 +33,7 @@ class TemperatureConverter
 		puts('cent: ' + cent.to_s)
 		puts('fahr: ' + fahr.to_s)
 
-		always :relationFahrCent, {:c => :cent, :f => :fahr}, binding
+		once :relationFahrCent, {:c => :cent, :f => :fahr}, binding
 	
 		puts('cent: ' + cent.to_s)
 		puts('fahr: ' + fahr.to_s)

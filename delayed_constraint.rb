@@ -1,5 +1,3 @@
-require 'libz3'
-
 class Object
 	@@constraints = {}
 
@@ -23,6 +21,7 @@ class Object
 	def _once(*args, &block)
 	    constraint = _always(*args, &block)
 	    constraint.disable
+	    constraint
  	end
 end
 
@@ -34,7 +33,7 @@ class DelayedConstraint
 
 	def bind(bindings, context, type)
 		unless bindings.nil?
-			bindings.each do |key, value| 
+			bindings.each do |key, value|
 				@constraint = constraint.gsub(":#{key.to_s}", value.to_s)
 			end
 		end
