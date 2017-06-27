@@ -5,6 +5,10 @@ class DressCode
     # cl, c, c1, c2 abbreviations for 'clothing'
     constraint :in_colors, "{ :cl.in :colors }"
     constraint :has_primary_color, "{ :c == 'blue'.to_sym }"
+    # Task 1: Change constraint definition
+    # constraint :has_primary_color, "{ :c == 'black'.to_sym }"
+    # Task 4: Add secondary color constraint
+    # constraint :has_secondary_color, "{ :c == 'green'.to_sym }"
     constraint :equal_colors, "{ :c1 == :c2 }"
     constraint :not_equal_colors, "{ :c1 != :c2 }"
 
@@ -27,15 +31,27 @@ class DressCode
         always :in_colors, { :cl => :@shirt, :colors => :@colors }, binding
         always :in_colors, { :cl => :@tie, :colors => :@colors }, binding
         always :in_colors, { :cl => :@pants, :colors => :@colors }, binding
+        # Task 2: Change variable bindings
+        # always :in_colors, { :cl => :@belt, :colors => :@basic_colors }, binding
+        # always :in_colors, { :cl => :@shoes, :colors => :@basic_colors }, binding
         always :in_colors, { :cl => :@belt, :colors => :@colors }, binding
         always :in_colors, { :cl => :@shoes, :colors => :@colors }, binding
 
         always :equal_colors, { :c1 => :@belt, :c2 => :@shoes }, binding
 
+        # Task 3: Suit color should be consistent
+        # always :equal_colors, { :c1 => :@jacket, :c2 => :@pants }, binding
+
         always :not_equal_colors, { :c1 => :@shirt, :c2 => :@pants }, binding
 
         always :has_primary_color, { :c => :@jacket }, binding
         always :has_primary_color, { :c => :@pants }, binding
+
+        # Task 4: Add constraint trigger secondary_color
+        # once :has_secondary_color, { :c => :@tie }, binding
+
+        # Task 5: Change once to always
+        # always :has_secondary_color, { :c => :@tie }, binding
 
         print_outfit __method__
     end
@@ -71,8 +87,8 @@ d.outfit_rules
 d.change_style({tie: :red})
 
 # Tasks
-# 1. Primary color should be black instead of blue
-# 2. Shoes and belt should always be one of the basic colors
-# 3. Jacket should have the same color as the pants
-# 4. Tie should have the secondary color 'blue' at first (once) but could be changed later on
-# 5. Tie should always have the secondary color (instead of any possible color as in 4)
+# 1. Primary color should be black instead of blue -> Change constraint definition in one place instead of multiple places
+# 2. Shoes and belt should always be one of the basic colors -> Change variable bindings exactly (without reusage)
+# 3. Jacket should have the same color as the pants -> Reuse equal_colors constraint & binding
+# 4. Tie should have the secondary color 'blue' at first (once) but could be changed later on -> Add once-Constraint
+# 5. Tie should always have the secondary color (instead of any possible color as in 4) -> Change once to always and constraint reusage
