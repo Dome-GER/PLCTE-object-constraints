@@ -2,14 +2,13 @@ require_relative '../delayed_constraint'
 require 'libz3'
 
 class DressCode
-    constraint :in_colors, "{ :c.in @colors }"
+    constraint :in_colors, "{ :cl.in :colors }"
     # Task 1: Change constraint definition
     # constraint :primary_color, "{ :c == 'black'.to_sym }"
     constraint :primary_color, "{ :c == 'blue'.to_sym }"
-    constraint :has_basic_color, "{ :c.in @basic_colors }"
-    # Task 3: Add has_accent_color constraint
-    # constraint :has_accent_color, "{ :c.in @accent_colors }"
-
+    # Task 4: Add secondary color constraint
+    # constraint :secondary_color, "{ :c == 'green'.to_sym }"
+    
     constraint :eq, "{ :c1 == :c2 }"
     constraint :not_eq, "{ :c1 != :c2 }"
 
@@ -26,34 +25,37 @@ class DressCode
         @pants = 0
         @belt = 0
         @shoes = 0
-
-        always :in_colors, { :c => :@jacket }, binding
-        always :in_colors, { :c => :@shirt }, binding
-        always :in_colors, { :c => :@tie }, binding
-        always :in_colors, { :c => :@pants }, binding
-        always :in_colors, { :c => :@belt }, binding
-        always :in_colors, { :c => :@shoes }, binding
     end
 
     def outfit_rules
-        # Accessoires should fit
-        always :eq, { :c1 => :@belt, :c2 => :@tie }, binding
+        always :in_colors, { :cl => :@jacket, :colors => :@colors }, binding
+        always :in_colors, { :cl => :@shirt, :colors => :@colors }, binding
+        always :in_colors, { :cl => :@tie, :colors => :@colors }, binding
+        always :in_colors, { :cl => :@pants, :colors => :@colors }, binding
+        # Task 2: Change variable bindings
+        # always :in_colors, { :cl => :@belt, :colors => :@basic_colors }, binding
+        # always :in_colors, { :cl => :@shoes, :colors => :@basic_colors }, binding
+        always :in_colors, { :cl => :@belt, :colors => :@colors }, binding
+        always :in_colors, { :cl => :@shoes, :colors => :@colors }, binding
 
-        # Task 2: Suit color should be consistent
+        # Belt should fit shoes
+        always :eq, { :c1 => :@belt, :c2 => :@shoes }, binding
+
+        # Task 3: Suit color should be consistent
         # always :eq, { :c1 => :@jacket, :c2 => :@pants }, binding
 
         # Same color for shirt and pants not allowed
         always :not_eq, { :c1 => :@shirt, :c2 => :@pants }, binding
 
         # Color of pants should be fixed to primary color
-        always :primary_color, { :c => :@pants }, binding
         always :primary_color, { :c => :@jacket }, binding
+        always :primary_color, { :c => :@pants }, binding
 
-        # Shoes have a plain color
-        always :has_basic_color, { :c => :@shoes }, binding
+        # Task 4: Add constraint trigger secondary_color
+        # once :secondary_color, { :c => :@tie }, binding
 
-        # Task 3: Add constraint trigger has_accent_color
-        # always :has_accent_color, { :c => :@tie }, binding
+        # Task 5: Change once to always
+        # always :secondary_color, { :c => :@tie }, binding
 
         print_outfit __method__
     end
@@ -84,11 +86,11 @@ d = DressCode.new
 # Outfit is recommended to the customer
 d.outfit_rules
 # Customer can change some clothing
-d.change_style({shirt: :light_blue})
+d.change_style({tie: :red})
 
 # Tasks
 # 1. Primary color is changed to black instead of blue -> Change constraint definition in one place instead of multiple places
-# 2. Jacket should have the same color as the pants -> Reuse eq constraint & binding
-# 3. Set accent color for tie -> Add constraint for accent color
-# Missing
-# 4. Shoes do not need to have a basic color any longer but the belt always has to -> Change once to always and change variable binding explicitly (without reusage)
+# 2. Shoes and belt should always be in basic colors -> Change variable bindings exactly (without reusage)
+# 3. Jacket should have the same color as the pants -> Reuse eq constraint & binding
+# 4. Tie should have the secondary color 'blue' initially -> Add constraint for accent color
+# 5. Tie should always have the secondary color instead of any color -> Change once to always and constraint usage
